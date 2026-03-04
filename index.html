@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SXMB v5.3 LOCKED – 2 CON (ĐUÔI #1 / ĐUÔI #2)</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:16px;background:#fafafa}
+  h1{font-size:18px;margin:0 0 6px}
+  .small{font-size:12px;color:#666}
+  .card{background:#fff;border:1px solid #e6e6e6;border-radius:14px;padding:12px;margin-top:12px}
+  textarea,input{width:100%;padding:10px;border:1px solid #ccc;border-radius:12px;font-size:14px}
+  textarea{min-height:170px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+  button{padding:8px 12px;border:0;border-radius:12px;font-weight:900;cursor:pointer}
+  .primary{background:#111;color:#fff}
+  .good{background:#eaffea;color:#064}
+  .bad{background:#ffecec;color:#700}
+  .ghost{background:#f1f1f1}
+  .danger{background:#ffecec;color:#700}
+  .big{font-size:34px;font-weight:950;letter-spacing:0.5px}
+  .sep{height:1px;background:#eee;margin:12px 0}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .risk-low{color:#0a7a0a;font-weight:950}
+  .risk-mid{color:#c48a00;font-weight:950}
+  .risk-high{color:#c00000;font-weight:950}
+  table{width:100%;border-collapse:collapse;margin-top:10px}
+  th,td{border-bottom:1px solid #eee;padding:8px 6px;font-size:13px;text-align:left;vertical-align:top}
+  th{background:#fafafa;position:sticky;top:0}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#f2f2f2;font-size:12px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:520px){ .grid2{grid-template-columns:1fr} }
+  .hit{color:#0a7a0a;font-weight:950}
+  .miss{color:#c00000;font-weight:950}
+</style>
+</head>
+<body>
+
+<h1>SXMB v5.3 LOCKED – 2 CON/NGÀY (ĐUÔI #1 / ĐUÔI #2)</h1>
+<div class="small">
+  <span class="pill">v5.3 EXACT</span>
+  <span class="pill">LOCK: Con 1 = đuôi #1</span>
+  <span class="pill">LOCK: Con 2 = đuôi #2</span>
+  <span class="pill">Xanh = trúng, Đỏ = xịt</span>
+  <div style="margin-top:6px">Dán đúng format: <span class="mono">DB: ... / G1: ... / ... / G7: ...</span></div>
+</div>
+
+<div class="card">
+  <div class="row">
+    <b>Ngày N</b>
+    <div class="row">
+      <button class="ghost" onclick="fillSample('txtN')">Mẫu</button>
+      <button class="ghost" onclick="clearBox('txtN')">Xoá</button>
+    </div>
+  </div>
+  <textarea id="txtN" placeholder="DB: 82438
+G1: 32172
+G2: 39869 21073
+G3: 48067 07113 74630 05458 91202 00608
+G4: 1508 4847 5535 3417
+G5: 1130 7400 4663 1636 7725 6936
+G6: 768 195 519
+G7: 70 95 10 43"></textarea>
+</div>
+
+<div class="card">
+  <div class="row">
+    <b>Ngày N-1</b>
+    <div class="row">
+      <button class="ghost" onclick="fillSample('txtN1')">Mẫu</button>
+      <button class="ghost" onclick="clearBox('txtN1')">Xoá</button>
+    </div>
+  </div>
+  <textarea id="txtN1"></textarea>
+</div>
+
+<div class="card">
+  <div class="row">
+    <b>Ngày N-2</b>
+    <div class="row">
+      <button class="ghost" onclick="fillSample('txtN2')">Mẫu</button>
+      <button class="ghost" onclick="clearBox('txtN2')">Xoá</button>
+    </div>
+  </div>
+  <textarea id="txtN2"></textarea>
+</div>
+
+<div class="card">
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1">
+      <b>Ngày soi (N+1)</b>
+      <input id="dateTarget" placeholder="vd 26/2" class="mono">
+    </div>
+    <button class="primary" id="btnPick">CHỐT 2 CON</button>
+  </div>
+
+  <div class="sep"></div>
+
+  <div id="resultBox" class="small">Chưa chốt.</div>
+
+  <div class="row" style="margin-top:10px">
+    <button class="good" id="btnHit" disabled>✅ Lưu TRÚNG</button>
+    <button class="bad" id="btnMiss" disabled>❌ Lưu SỊT</button>
+    <button class="danger" id="btnUndo" disabled>↩︎ Xoá bản ghi gần nhất</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="grid2">
+    <div>
+      <b>Thống kê (Trúng ít nhất 1/2)</b>
+      <div class="small" style="margin-top:6px">
+        Tổng: <b id="kTotal">0</b><br>
+        Tỷ lệ: <b id="kRateAny">0%</b><br>
+        Chuỗi sịt dài nhất: <b id="kMiss">0</b>
+      </div>
+    </div>
+    <div>
+      <b>Thống kê theo từng con</b>
+      <div class="small" style="margin-top:6px">
+        Con 1 (đuôi #1): <b id="kRate1">0%</b><br>
+        Con 2 (đuôi #2): <b id="kRate2">0%</b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="row">
+    <b>Lịch sử</b>
+    <span class="pill">localStorage</span>
+    <button class="danger" id="btnClearAll">Xoá toàn bộ lịch sử</button>
+  </div>
+  <div style="max-height:420px;overflow:auto;margin-top:10px">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Ngày</th>
+          <th>Con 1 (đuôi #1)</th>
+          <th>Con 2 (đuôi #2)</th>
+          <th>Risk</th>
+          <th>KQ</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="hist"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const KEY="sxmb_v53_2tails_locked_v1";
+
+function clearBox(id){document.getElementById(id).value=""}
+function pad2(n){return String(n).padStart(2,"0")}
+function fillSample(id){
+  document.getElementById(id).value =
+`DB: 82438
+G1: 32172
+G2: 39869 21073
+G3: 48067 07113 74630 05458 91202 00608
+G4: 1508 4847 5535 3417
+G5: 1130 7400 4663 1636 7725 6936
+G6: 768 195 519
+G7: 70 95 10 43`;
+}
+
+// ===== Parser =====
+function parseNums(text){
+  const raw = String(text||"").replace(/\u00A0/g," ");
+  const lines = raw.split(/\r?\n/);
+  const out = [];
+
+  function pushChunks(digits, chunkLen){
+    if (!digits) return;
+    const runs = digits.match(/\d+/g) || [];
+    if (runs.length >= 2){
+      for (const r of runs){
+        if (r.length >= 2){
+          const num = parseInt(r.slice(-2), 10);
+          if (!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
+        }
+      }
+      return;
+    }
+    const s = runs.join("");
+    if (!s) return;
+
+    if (chunkLen && s.length >= chunkLen){
+      const nChunks = Math.floor(s.length / chunkLen);
+      for (let i=0;i<nChunks;i++){
+        const chunk = s.slice(i*chunkLen, i*chunkLen + chunkLen);
+        const num = parseInt(chunk.slice(-2), 10);
+        if (!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
+      }
+      return;
+    }
+
+    if (s.length >= 2){
+      const num = parseInt(s.slice(-2), 10);
+      if (!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
+    }
+  }
+
+  function labelChunkLen(lbl){
+    const L = lbl.toUpperCase().replace(/\s+/g,"");
+    if (L==="DB" || L==="ĐB") return 5;
+    if (L==="G1" || L==="G.1") return 5;
+    if (L==="G2" || L==="G.2") return 5;
+    if (L==="G3" || L==="G.3") return 5;
+    if (L==="G4" || L==="G.4") return 4;
+    if (L==="G5" || L==="G.5") return 4;
+    if (L==="G6" || L==="G.6") return 3;
+    if (L==="G7" || L==="G.7") return 2;
+    return null;
+  }
+
+  for (const line of lines){
+    const L = line.trim();
+    if (!L) continue;
+
+    const m = L.match(/^(ĐB|DB|G\.?\s*1|G\.?\s*2|G\.?\s*3|G\.?\s*4|G\.?\s*5|G\.?\s*6|G\.?\s*7)\s*[^\d]*\s*/i);
+    if (m){
+      const label = m[1];
+      const rest = L.slice(m[0].length);
+      pushChunks(rest, labelChunkLen(label));
+      continue;
+    }
+
+    const runs = L.match(/\d+/g) || [];
+    for (const r of runs){
+      if (r.length >= 2){
+        const num = parseInt(r.slice(-2), 10);
+        if (!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
+      }
+    }
+  }
+  return out;
+}
+
+// ===== Engine =====
+function head(n){return Math.floor(n/10)}
+function tail(n){return n%10}
+function freqMap(nums){
+  const m=new Map();
+  for(const n of nums) m.set(n,(m.get(n)||0)+1);
+  return m;
+}
+function headCounts(nums){
+  const c=Array(10).fill(0);
+  for(const n of nums) c[head(n)]++;
+  return c;
+}
+function tailCounts(nums){
+  const c=Array(10).fill(0);
+  for(const n of nums) c[tail(n)]++;
+  return c;
+}
+function topIndices(counts){
+  const arr=counts.map((v,i)=>({i,v}));
+  arr.sort((a,b)=>(b.v-a.v)||(a.i-b.i));
+  return arr;
+}
+function chooseTailAnchors(numsN2, numsN1, numsN){
+  const all=[...numsN2,...numsN1,...numsN];
+  const t3=tailCounts(all);
+  const tN=tailCounts(numsN);
+  const sorted=topIndices(t3);
+  const t1=sorted[0]?.i ?? 0;
+  const t2=sorted[1]?.i ?? t1;
+  const isDump = (t3[t1] >= 9) && (tN[t1] >= 4);
+
+  const tail1 = isDump ? t2 : t1;
+  const tail2 = isDump ? (sorted[2]?.i ?? t1) : t2;
+  return {tail1, tail2};
+}
+
+function scoreCandidates(numsN2, numsN1, numsN, tailAnchor){
+  const mapN=freqMap(numsN);
+  const mapN1=freqMap(numsN1);
+  const hcN=headCounts(numsN);
+  const hcN1=headCounts(numsN1);
+
+  const candSet=new Set(numsN.filter(x=>tail(x)===tailAnchor));
+  const candidates=[...candSet];
+
+  const scored=candidates.map(n=>{
+    const fN=mapN.get(n)||0;
+    const fN1=mapN1.get(n)||0;
+    let score=0;
+    if(fN===1) score+=3;
+    if(fN>=2) score-=4;
+    if(fN1>0 && fN>0) score-=2;
+
+    const diffHead = hcN[head(n)] - hcN1[head(n)];
+    if(diffHead>=1) score+=2;
+
+    return {n, score, fN, fN1, diffHead};
+  });
+
+  scored.sort((a,b)=>
+    (b.score-a.score) ||
+    (a.fN-b.fN) ||
+    (b.diffHead-a.diffHead) ||
+    (a.n-b.n)
+  );
+  return scored;
+}
+
+function pickOneFromTail(numsN2, numsN1, numsN, tailAnchor){
+  const scored = scoreCandidates(numsN2, numsN1, numsN, tailAnchor);
+  if(scored.length===0) return null;
+
+  const top1=scored[0];
+  const top2=scored[1]||scored[0];
+  const bait = (top1.fN>=2) || (top1.fN1>0 && top1.fN>0);
+  const chosen = bait ? top2 : top1;
+
+  let risk="LOW";
+  if(scored.length<=1) risk="HIGH";
+  else if(Math.abs(top1.score-top2.score)<=1) risk="HIGH";
+  else if(scored.length>=6) risk="MID";
+
+  return {n: chosen.n, risk};
+}
+
+function pickTwoLocked(numsN2, numsN1, numsN){
+  const {tail1, tail2} = chooseTailAnchors(numsN2, numsN1, numsN);
+  const p1 = pickOneFromTail(numsN2, numsN1, numsN, tail1);
+  const p2 = pickOneFromTail(numsN2, numsN1, numsN, tail2);
+
+  if(!p1 && !p2) return null;
+  const strong = p1 ? p1.n : p2.n;
+  const light  = p2 ? p2.n : strong;
+  const risk   = p1 ? p1.risk : p2.risk;
+  return {strong, light, risk, tail1, tail2};
+}
+
+// ===== History =====
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)||"[]"); } catch { return []; } }
+function save(arr){ localStorage.setItem(KEY, JSON.stringify(arr)); }
+function uuid(){ try { return crypto.randomUUID(); } catch { return String(Date.now()) + Math.random().toString(16).slice(2); } }
+function isTrue(v){ return v===true || v==="true" || v===1 || v==="1"; }
+
+function maxMissStreakAny(arrChrono){
+  let best=0, cur=0;
+  for(const it of arrChrono){
+    if(isTrue(it.anyHit)){ cur=0; }
+    else { cur++; best=Math.max(best,cur); }
+  }
+  return best;
+}
+
+function updateUI(){
+  const arr = load();
+  const total = arr.length;
+
+  const hitsAny = arr.filter(x=>isTrue(x.anyHit)).length;
+  const rateAny = total ? Math.round((hitsAny/total)*100) : 0;
+
+  const hits1 = arr.filter(x=>isTrue(x.strongHit)).length;
+  const hits2 = arr.filter(x=>isTrue(x.lightHit)).length;
+  const rate1 = total ? Math.round((hits1/total)*100) : 0;
+  const rate2 = total ? Math.round((hits2/total)*100) : 0;
+
+  document.getElementById("kTotal").textContent = String(total);
+  document.getElementById("kRateAny").textContent = String(rateAny) + "%";
+  document.getElementById("kRate1").textContent = String(rate1) + "%";
+  document.getElementById("kRate2").textContent = String(rate2) + "%";
+
+  const chrono = arr.slice().reverse();
+  document.getElementById("kMiss").textContent = String(maxMissStreakAny(chrono));
+
+  const tbody = document.getElementById("hist");
+  tbody.innerHTML = "";
+  arr.forEach((x,i)=>{
+    const riskTxt = x.risk==="LOW" ? "🟢 Ổn" : (x.risk==="MID" ? "🟡 Trung tính" : "🔴 Nguy hiểm");
+    const kqTxt = isTrue(x.anyHit) ? "✅" : "❌";
+    const sClass = isTrue(x.strongHit) ? "hit" : "miss";
+    const lClass = isTrue(x.lightHit) ? "hit" : "miss";
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td class="mono">${x.date || ""}</td>
+      <td class="mono ${sClass}"><b>${x.strong || ""}</b></td>
+      <td class="mono ${lClass}">${x.light || ""}</td>
+      <td>${riskTxt}</td>
+      <td>${kqTxt}</td>
+      <td><button class="danger" data-del="${x.id}">Xoá</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll("button[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del");
+      const next = load().filter(r=>r.id!==id);
+      save(next);
+      updateUI();
+    });
+  });
+
+  document.getElementById("btnUndo").disabled = (total===0);
+}
+
+let lastPick = null;
+
+document.getElementById("btnPick").addEventListener("click", ()=>{
+  const numsN  = parseNums(document.getElementById("txtN").value);
+  const numsN1 = parseNums(document.getElementById("txtN1").value);
+  const numsN2 = parseNums(document.getElementById("txtN2").value);
+
+  const box = document.getElementById("resultBox");
+  if(!numsN.length || !numsN1.length || !numsN2.length){
+    box.textContent = "Thiếu dữ liệu 3 ngày. (Dán đúng format DB/G1… mỗi ngày 1 ô)";
+    lastPick = null;
+    document.getElementById("btnHit").disabled = true;
+    document.getElementById("btnMiss").disabled = true;
+    return;
+  }
+
+  const res = pickTwoLocked(numsN2, numsN1, numsN);
+  if(!res){
+    box.textContent = "Không chốt được (không có ứng viên).";
+    lastPick = null;
+    document.getElementById("btnHit").disabled = true;
+    document.getElementById("btnMiss").disabled = true;
+    return;
+  }
+  lastPick = res;
+
+  let riskLine = "";
+  if(res.risk==="LOW") riskLine = `<div class="risk-low">🟢 Ổn</div>`;
+  else if(res.risk==="MID") riskLine = `<div class="risk-mid">🟡 Trung tính</div>`;
+  else riskLine = `<div class="risk-high">🔴 Nguy hiểm (giảm tiền)</div>`;
+
+  box.innerHTML = `
+    <div class="grid2">
+      <div>
+        <div class="small">Con 1 (đuôi #1 = ${res.tail1})</div>
+        <div class="big mono">${pad2(res.strong)}</div>
+      </div>
+      <div>
+        <div class="small">Con 2 (đuôi #2 = ${res.tail2})</div>
+        <div class="big mono">${pad2(res.light)}</div>
+      </div>
+    </div>
+    <div style="margin-top:8px">${riskLine}</div>
+  `;
+
+  document.getElementById("btnHit").disabled = false;
+  document.getElementById("btnMiss").disabled = false;
+});
+
+function askWhichHit(){
+  const ans = prompt("Trúng con nào? Nhập: 1 = Con 1, 2 = Con 2, 3 = Cả hai", "1");
+  const v = String(ans||"").trim();
+  if(v==="2") return {strongHit:false, lightHit:true};
+  if(v==="3") return {strongHit:true, lightHit:true};
+  return {strongHit:true, lightHit:false};
+}
+
+function saveRecord(strongHit, lightHit){
+  const date = document.getElementById("dateTarget").value.trim();
+  const rec = {
+    id: uuid(),
+    date,
+    strong: pad2(lastPick.strong),
+    light: pad2(lastPick.light),
+    risk: lastPick.risk,
+    strongHit: strongHit,
+    lightHit: lightHit,
+    anyHit: (strongHit || lightHit)
+  };
+  const arr = load();
+  arr.unshift(rec);
+  save(arr);
+  updateUI();
+}
+
+document.getElementById("btnHit").addEventListener("click", ()=>{
+  if(!lastPick) return;
+  const {strongHit, lightHit} = askWhichHit();
+  saveRecord(strongHit, lightHit);
+});
+
+document.getElementById("btnMiss").addEventListener("click", ()=>{
+  if(!lastPick) return;
+  saveRecord(false, false);
+});
+
+document.getElementById("btnUndo").addEventListener("click", ()=>{
+  const arr = load();
+  if(arr.length===0) return;
+  arr.shift();
+  save(arr);
+  updateUI();
+});
+
+document.getElementById("btnClearAll").addEventListener("click", ()=>{
+  if(!confirm("Xoá toàn bộ lịch sử?")) return;
+  save([]);
+  updateUI();
+});
+
+updateUI();
+</script>
+
+</body>
+</html>
