@@ -1,277 +1,457 @@
 <!doctype html>
 <html lang="vi">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SXMB v7.2 REAL-LITE</title>
-<style>
-*{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:16px;background:#fafafa;color:#111}
-h1{font-size:18px;margin:0 0 6px}.small{font-size:12px;color:#666;line-height:1.45}
-.card{background:#fff;border:1px solid #e7e7e7;border-radius:14px;padding:12px;margin-top:12px}
-textarea,input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:12px;font-size:14px;background:#fff}
-textarea{min-height:145px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas}
-button{padding:8px 12px;border:0;border-radius:12px;font-weight:900;cursor:pointer}
-.primary{background:#111;color:#fff}.ghost{background:#f1f1f1}.goodBtn{background:#eaffea;color:#064}.badBtn,.danger{background:#ffecec;color:#700}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}.sep{height:1px;background:#eee;margin:12px 0}
-.big{font-size:44px;font-weight:950;letter-spacing:.5px}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas}
-.pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#f2f2f2;font-size:12px;margin:1px}
-.ok{background:#eefbf0;border:1px solid #c7efce;color:#075c13;border-radius:12px;padding:8px;margin-top:8px}
-.warn{background:#fff8e1;border:1px solid #ffe0a3;color:#6b4300;border-radius:12px;padding:8px;margin-top:8px}
-.badbox{background:#fff0f0;border:1px solid #ffd0d0;color:#8a0000;border-radius:12px;padding:8px;margin-top:8px}
-table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border-bottom:1px solid #eee;padding:8px 6px;font-size:13px;text-align:left;vertical-align:top}
-th{background:#fafafa}.hit{color:#0a7a0a;font-weight:950}.miss{color:#c00000;font-weight:950}.tier{font-weight:950}
-.tsafe{color:#0a7a0a}.tlite{color:#1a5fb4}.tricky{color:#8a2be2}.tnghi{color:#c00000}.reason{font-size:12px;color:#444;line-height:1.45}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MB_V3_N1_CORE - Test mù soi lô MB</title>
+  <style>
+    :root{
+      --bg:#0f172a;--card:#111827;--card2:#1f2937;--txt:#e5e7eb;--muted:#9ca3af;
+      --line:#334155;--accent:#22c55e;--bad:#ef4444;--warn:#f59e0b;--blue:#38bdf8;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0b1220,#111827);color:var(--txt)}
+    .wrap{max-width:1220px;margin:auto;padding:18px}
+    h1{font-size:24px;margin:8px 0 4px}
+    h2{font-size:18px;margin:0 0 10px}
+    .sub{color:var(--muted);font-size:14px;margin-bottom:14px;line-height:1.5}
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:rgba(17,24,39,.92);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+    textarea,input,select,button{font:inherit}
+    textarea{width:100%;min-height:360px;background:#020617;color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:12px;line-height:1.38;resize:vertical}
+    input,select{background:#020617;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+    button{border:0;border-radius:10px;padding:10px 12px;background:var(--accent);color:#052e16;font-weight:700;cursor:pointer}
+    button.secondary{background:#334155;color:var(--txt)}
+    button.warn{background:var(--warn);color:#271600}
+    button.bad{background:var(--bad);color:white}
+    button.blue{background:var(--blue);color:#082f49}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+    .row > *{min-width:0}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:#020617;border:1px solid var(--line);color:var(--muted);font-size:13px}
+    .ok{color:#86efac}.badTxt{color:#fca5a5}.warnTxt{color:#fcd34d}.blueTxt{color:#7dd3fc}
+    .statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+    @media(max-width:700px){.statgrid{grid-template-columns:repeat(2,1fr)}}
+    .stat{background:#020617;border:1px solid var(--line);border-radius:12px;padding:10px}
+    .stat .n{font-size:22px;font-weight:800}.stat .l{font-size:12px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border-bottom:1px solid #263244;padding:8px;text-align:left;vertical-align:top}
+    th{color:#cbd5e1;background:#0b1220;position:sticky;top:0}
+    .scroll{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    details{border:1px solid var(--line);border-radius:12px;padding:9px 11px;background:#020617;margin:8px 0}
+    summary{cursor:pointer;font-weight:700}
+    .small{font-size:12px;color:var(--muted);line-height:1.45}
+    .log{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:10px;max-height:300px;overflow:auto}
+  </style>
 </head>
 <body>
-<h1>SXMB v7.2 REAL-LITE — cầu vị trí exact + quản lý kèo tuần</h1>
-<div class="small">
-  <span class="pill">Format KQ như m gửi</span>
-  <span class="pill">Bỏ dòng KQ/ngày tháng</span>
-  <span class="pill">Exact position</span>
-  <span class="pill">REAL-SAFE / REAL-LITE</span>
-  <span class="pill">Mục tiêu 2–3 kèo/tuần</span>
-  <div style="margin-top:6px">
-    Bản này giữ lõi v7.1, nhưng không siết REAL cứng. Nó chia kèo thành <b>SAFE</b> và <b>LITE</b> để phù hợp thực chiến 2–3 ngày/tuần.
+<div class="wrap">
+  <h1>MB_V3_N1_CORE / BALANCE — Tool test mù soi lô MB</h1>
+  <div class="sub">
+    Tool chạy <b>cuốn chiếu</b>: soi ngày D chỉ dùng D-3, D-2, D-1. Sau đó mới đối chiếu KQ ngày D.
+    Có 2 mode: <b>SAFE</b> cực siết và <b>BALANCE</b> nới selector. Không dùng dữ liệu tương lai để chấm.
   </div>
-</div>
 
-<div class="card">
-  <div class="row"><b>Ngày N — gần nhất</b><div><button class="ghost" onclick="fillSample('txtN')">Mẫu</button> <button class="ghost" onclick="clearBox('txtN')">Xoá</button></div></div>
-  <textarea id="txtN" placeholder="KQ XSMB 04/03/2026
-ĐB:
-G1:
-G2:
-G3:
-G4:
-G5:
-G6:
-G7:"></textarea><div id="parseN" class="small"></div>
-</div>
-<div class="card">
-  <div class="row"><b>Ngày N-1</b><div><button class="ghost" onclick="fillSample('txtN1')">Mẫu</button> <button class="ghost" onclick="clearBox('txtN1')">Xoá</button></div></div>
-  <textarea id="txtN1"></textarea><div id="parseN1" class="small"></div>
-</div>
-<div class="card">
-  <div class="row"><b>Ngày N-2</b><div><button class="ghost" onclick="fillSample('txtN2')">Mẫu</button> <button class="ghost" onclick="clearBox('txtN2')">Xoá</button></div></div>
-  <textarea id="txtN2"></textarea><div id="parseN2" class="small"></div>
-</div>
-<div class="card">
-  <div class="row"><b>Ngày N-3 — nên có</b><div><button class="ghost" onclick="fillSample('txtN3')">Mẫu</button> <button class="ghost" onclick="clearBox('txtN3')">Xoá</button></div></div>
-  <textarea id="txtN3" placeholder="Nên nhập đủ N-3 để học cầu exact."></textarea><div id="parseN3" class="small"></div>
-</div>
+  <div class="grid">
+    <section class="card">
+      <h2>1) Dán KQ nhiều ngày</h2>
+      <textarea id="input" placeholder="Dán KQ theo format:
+KQ XSMB 01/03/2026
 
-<div class="card">
-  <div class="grid3" style="align-items:end">
-    <div><b>Ngày soi N+1</b><input id="dateTarget" class="mono" placeholder="vd 05/03/2026"></div>
-    <div><b>Chế độ</b><select id="mode"><option value="practice" selected>THỰC CHIẾN: SAFE/LITE mới là kèo</option><option value="test">TEST: lưu mọi tầng</option></select></div>
-    <button class="primary" id="btnRun">CHỐT TOP 1</button>
-  </div>
-  <div class="sep"></div>
-  <div id="resultBox" class="small">Chưa chốt.</div>
-  <div class="row" style="margin-top:10px">
-    <button class="goodBtn" id="btnHit" disabled>✅ Lưu TRÚNG</button>
-    <button class="badBtn" id="btnMiss" disabled>❌ Lưu SỊT</button>
-    <button class="danger" id="btnUndo" disabled>↩︎ Xoá bản ghi gần nhất</button>
-  </div>
-</div>
-
-<div class="card">
-  <div class="grid3">
-    <div>
-      <b>Thống kê tổng</b>
-      <div class="small" style="margin-top:6px;line-height:1.55">
-        Tổng lưu: <b id="kTotal">0</b><br>
-        % Tổng: <b id="kRate">0%</b><br>
-        Chuỗi sịt dài nhất: <b id="kMiss">0</b>
+ĐB: 90148
+G1: 20116
+G2: 09827 74465
+...
+G7: 92 73 60 77"></textarea>
+      <div class="row">
+        <button onclick="parseOnly()">Đọc dữ liệu</button>
+        <button class="blue" onclick="runBacktest()">Chạy test mù</button>
+        <button class="secondary" onclick="clearAll()">Xóa</button>
       </div>
-    </div>
-    <div>
-      <b>Kèo chính SAFE/LITE</b>
-      <div class="small" style="margin-top:6px;line-height:1.55">
-        Tổng kèo chính: <b id="kMainTotal">0</b><br>
-        % kèo chính: <b id="kMainRate">0%</b><br>
-        Tuần này đã vào: <b id="kWeek">0</b>/3 kèo
-      </div>
-    </div>
-    <div>
-      <b>Quy ước tiền</b>
-      <div class="small" style="margin-top:6px;line-height:1.55">
-        REAL-SAFE: 1 đơn vị.<br>
-        REAL-LITE: 0.5 đơn vị.<br>
-        RICKY/NGHỈ: không vào tiền.
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="card">
-  <div class="row"><b>Lịch sử</b><span class="pill">localStorage</span><button class="danger" id="btnClearAll">Xoá toàn bộ</button></div>
-  <div style="max-height:420px;overflow:auto;margin-top:10px">
-    <table><thead><tr><th>#</th><th>Ngày</th><th>Chốt</th><th>Điểm</th><th>Tầng</th><th>Kèo?</th><th>KQ</th><th></th></tr></thead><tbody id="hist"></tbody></table>
+      <details open>
+        <summary>Cài đặt hệ</summary>
+        <div class="row">
+          <label class="pill">Mode
+            <select id="mode">
+              <option value="BALANCE">MB_V3_N1_BALANCE</option>
+              <option value="SAFE">MB_V3_N1_SAFE</option>
+            </select>
+          </label>
+          <label class="pill">Ngày lõi
+            <select id="window">
+              <option value="3">3 ngày gần nhất</option>
+            </select>
+          </label>
+          <label class="pill">Ngưỡng vào
+            <input id="minScore" type="number" step="0.1" value="7.0" style="width:80px">
+          </label>
+          <label class="pill">Top1 hơn Top2
+            <input id="gap" type="number" step="0.1" value="0.7" style="width:80px">
+          </label>
+        </div>
+        <div class="small">
+          SAFE tự tăng ngưỡng và gap. BALANCE mặc định: minScore 7.0, gap 0.7, tối thiểu 4/6 lớp tín hiệu.
+          Rule khóa: số đã về N-1 bị loại thẳng.
+        </div>
+      </details>
+
+      <details>
+        <summary>Log kỹ thuật</summary>
+        <div id="log" class="log mono small">Chưa chạy.</div>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>2) Kết quả tổng</h2>
+      <div class="statgrid">
+        <div class="stat"><div id="sDays" class="n">0</div><div class="l">Ngày test</div></div>
+        <div class="stat"><div id="sBet" class="n">0</div><div class="l">Ngày vào</div></div>
+        <div class="stat"><div id="sHit" class="n ok">0</div><div class="l">Ăn</div></div>
+        <div class="stat"><div id="sMiss" class="n badTxt">0</div><div class="l">Trượt</div></div>
+      </div>
+      <div class="statgrid">
+        <div class="stat"><div id="sRate" class="n">-</div><div class="l">Tỷ lệ khi vào</div></div>
+        <div class="stat"><div id="sFreq" class="n">-</div><div class="l">Lệnh / tuần</div></div>
+        <div class="stat"><div id="sMaxLose" class="n">0</div><div class="l">Chuỗi trượt dài nhất</div></div>
+        <div class="stat"><div id="sParsed" class="n">0</div><div class="l">Ngày đọc được</div></div>
+      </div>
+
+      <h2 style="margin-top:16px">3) Soi ngày tiếp theo</h2>
+      <div class="small">Dùng 3 ngày cuối trong ô nhập để chốt cho ngày kế tiếp, chưa đối chiếu.</div>
+      <div class="row">
+        <button class="warn" onclick="predictNext()">Soi ngày kế tiếp</button>
+      </div>
+      <div id="nextBox" class="log mono small">Chưa soi.</div>
+    </section>
   </div>
+
+  <section class="card" style="margin-top:14px">
+    <h2>4) Bảng test mù cuốn chiếu</h2>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Ngày soi</th>
+            <th>Input được dùng</th>
+            <th>Chốt</th>
+            <th>Điểm</th>
+            <th>Top 2</th>
+            <th>Kết quả</th>
+            <th>Lý do</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"><tr><td colspan="7" class="small">Chưa có dữ liệu.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:14px">
+    <h2>5) Ghi chú chống overfit</h2>
+    <div class="small">
+      Bản index này không “học” lại từ kết quả sau khi chạy. Mỗi ngày D, hàm chọn số chỉ nhận 3 ngày trước đó.
+      KQ ngày D chỉ được dùng ở bước đối chiếu ăn/trượt. Muốn test mù thật hơn nữa, m có thể dán từng cụm 3 ngày và dùng nút “Soi ngày kế tiếp”.
+    </div>
+  </section>
 </div>
 
 <script>
-const KEY="sxmb_v72_reallite_v1";
-const POSITIONS=["DB","G1","G2.1","G2.2","G3.1","G3.2","G3.3","G3.4","G3.5","G3.6","G4.1","G4.2","G4.3","G4.4","G5.1","G5.2","G5.3","G5.4","G5.5","G5.6","G6.1","G6.2","G6.3","G7.1","G7.2","G7.3","G7.4"];
-const POS_W={DB:1.45,G1:1.35,"G2.1":1.2,"G2.2":1.2,"G7.1":1.25,"G7.2":1.25,"G7.3":1.25,"G7.4":1.25};
-function pad2(n){return String(n).padStart(2,"0")}
-function head(n){return Math.floor(n/10)} function tail(n){return n%10} function rev(n){return (n%10)*10+Math.floor(n/10)}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function clearBox(id){document.getElementById(id).value="";updateParsePreview()}
-function fillSample(id){document.getElementById(id).value=`KQ XSMB 04/03/2026
-ĐB: 10619
-G1: 13245
-G2: 69150 47741
-G3: 26251 44791 25742 09992 40402 26367
-G4: 3409 4837 1862 5415
-G5: 8642 0031 0073 4613 7360 3672
-G6: 895 439 658
-G7: 05 26 91 35`;updateParsePreview()}
+const prizeWeight = {DB:2, G1:1.5, G2:1.2, G3:1, G4:.5, G5:.5, G6:.5, G7:.5};
 
-function labelExpected(label){const L=label.toUpperCase().replace(/\s+/g,"");if(L==="DB"||L==="ĐB"||L==="G1"||L==="G.1")return 1;if(L==="G2"||L==="G.2")return 2;if(L==="G3"||L==="G.3")return 6;if(L==="G4"||L==="G.4")return 4;if(L==="G5"||L==="G.5")return 6;if(L==="G6"||L==="G.6")return 3;if(L==="G7"||L==="G.7")return 4;return 0}
-function chunkLen(label){const L=label.toUpperCase().replace(/\s+/g,"");if(L==="DB"||L==="ĐB"||L==="G1"||L==="G.1"||L==="G2"||L==="G.2"||L==="G3"||L==="G.3")return 5;if(L==="G4"||L==="G.4"||L==="G5"||L==="G.5")return 4;if(L==="G6"||L==="G.6")return 3;if(L==="G7"||L==="G.7")return 2;return 0}
-function normLabel(label){return label.toUpperCase().replace(/\s+/g,"").replace("ĐB","DB").replace("G.","G")}
-function parseDay(text){
- const raw=String(text||"").replace(/\u00A0/g," "),lines=raw.split(/\r?\n/),ignored=[],pos={},nums=[];
- for(const line of lines){const L=line.trim();if(!L)continue;if(/^KQ\s*(XSMB|MB|MIỀN\s*BẮC)?/i.test(L)){ignored.push(L);continue}
-  const m=L.match(/^(ĐB|DB|G\.?\s*1|G\.?\s*2|G\.?\s*3|G\.?\s*4|G\.?\s*5|G\.?\s*6|G\.?\s*7)\s*[:.\-–—]?\s*/i);
-  if(!m){if(/\d/.test(L))ignored.push(L);continue}
-  const label=normLabel(m[1]),rest=L.slice(m[0].length),runs=String(rest||"").match(/\d+/g)||[];let vals=[],exp=labelExpected(label),len=chunkLen(label);
-  if(runs.length>=exp)vals=runs.slice(0,exp).map(r=>parseInt(r.slice(-2),10));
-  else if(runs.length===1){const s=runs[0],k=Math.floor(s.length/len);for(let i=0;i<Math.min(k,exp);i++)vals.push(parseInt(s.slice(i*len,i*len+len).slice(-2),10))}
-  else vals=runs.map(r=>parseInt(r.slice(-2),10));
-  vals=vals.filter(n=>!Number.isNaN(n)&&n>=0&&n<=99);
-  if(label==="DB"){if(vals[0]!==undefined){pos.DB=vals[0];nums.push(vals[0])}}
-  else if(label==="G1"){if(vals[0]!==undefined){pos.G1=vals[0];nums.push(vals[0])}}
-  else vals.forEach((v,i)=>{const p=`${label}.${i+1}`;if(POSITIONS.includes(p)){pos[p]=v;nums.push(v)}})
- }
- return {pos,nums,ignored,okCount:Object.keys(pos).length}
+function pad2(n){ return String(n).padStart(2,'0'); }
+function normDate(d){
+  const m = d.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(!m) return d;
+  return pad2(m[1])+'/'+pad2(m[2])+'/'+m[3];
 }
-function freqMap(a){const m=new Map();for(const x of a)m.set(x,(m.get(x)||0)+1);return m}
-function contains(day,n){return (day.nums||[]).includes(n)}
-function exactSignals(v){const arr=[{kind:"same",value:v,w:1.0,label:`lặp ${pad2(v)}`}]; if(rev(v)!==v)arr.push({kind:"rev",value:rev(v),w:1.18,label:`đảo ${pad2(rev(v))}`}); return arr}
-function sigHit(sig,day){return contains(day,sig.value)?1:0}
-function buildRules(days){
- const usable=days.filter(Boolean), live=[];
- for(const p of POSITIONS){
-   const groups=new Map();
-   for(let i=0;i<usable.length-1;i++){
-     const from=usable[i],to=usable[i+1],v=from.pos[p]; if(v===undefined)continue;
-     for(const sig of exactSignals(v)){
-       const key=`${p}|${sig.kind}`;
-       if(!groups.has(key))groups.set(key,{type:"samePos",p,sigKind:sig.kind,hits:0,tries:0,latestHit:0,latestValue:null});
-       const g=groups.get(key), hit=sigHit(sig,to);
-       g.tries++; g.hits+=hit; g.latestHit=hit; g.latestValue=sig.value;
-     }
-   }
-   for(const g of groups.values()){
-     if(g.tries>=2 && g.hits>=2){
-       const w=(POS_W[p]||1)*(g.sigKind==="rev"?1.18:1.0)*(1+g.hits*.65+(g.latestHit?.35:0));
-       live.push({...g,weight:Math.round(w*100)/100,label:`${p} ${g.sigKind==="rev"?"đảo":"lặp"} (${g.hits}/${g.tries})`});
-     }
-   }
- }
- const mainFrom=POSITIONS.filter(p=>["DB","G1"].includes(p)||p.startsWith("G2")||p.startsWith("G7"));
- const mainTo=POSITIONS.filter(p=>["DB","G1"].includes(p)||p.startsWith("G2")||p.startsWith("G6")||p.startsWith("G7"));
- for(const a of mainFrom){
-   for(const b of mainTo){
-     const groups=new Map();
-     for(let i=0;i<usable.length-1;i++){
-       const from=usable[i],to=usable[i+1],v=from.pos[a],target=to.pos[b];
-       if(v===undefined||target===undefined)continue;
-       for(const sig of exactSignals(v)){
-         const key=`${a}->${b}|${sig.kind}`;
-         if(!groups.has(key))groups.set(key,{type:"pairPos",a,b,sigKind:sig.kind,hits:0,tries:0,latestHit:0,latestValue:null});
-         const g=groups.get(key), hit=(target===sig.value)?1:0;
-         g.tries++; g.hits+=hit; g.latestHit=hit; g.latestValue=sig.value;
-       }
-     }
-     for(const g of groups.values()){
-       if(g.tries>=2 && g.hits>=2){
-         const aw=POS_W[a]||1,bw=POS_W[b]||1,w=((aw+bw)/2)*(g.sigKind==="rev"?1.22:1.05)*(1+g.hits*.8+(g.latestHit?.45:0));
-         live.push({...g,weight:Math.round(w*100)/100,label:`${a}→${b} ${g.sigKind==="rev"?"đảo":"lặp"} (${g.hits}/${g.tries})`});
-       }
-     }
-   }
- }
- live.sort((a,b)=>b.weight-a.weight);
- return live;
+function dateKey(d){
+  const [dd,mm,yy] = d.split('/').map(Number);
+  return yy*10000+mm*100+dd;
 }
-function applyRule(rule,N,cand){
- if(rule.type==="samePos"){const v=N.pos[rule.p]; if(v===undefined)return 0; const want=rule.sigKind==="rev"?rev(v):v; return cand===want?rule.weight:0}
- if(rule.type==="pairPos"){const v=N.pos[rule.a]; if(v===undefined)return 0; const want=rule.sigKind==="rev"?rev(v):v; return cand===want?rule.weight:0}
- return 0;
+function last2(token){
+  const s = String(token).replace(/\D/g,'');
+  if(!s) return null;
+  return s.slice(-2).padStart(2,'0');
 }
-function scoreCandidates(D3,D2,D1,N){
- const days=D3?[D3,D2,D1,N]:[D2,D1,N], rules=buildRules(days), fN=freqMap(N.nums), f1=freqMap(D1.nums), f2=freqMap(D2.nums), f3=D3?freqMap(D3.nums):new Map();
- const recent=load().slice(0,7).map(x=>parseInt(x.chot,10)).filter(x=>!Number.isNaN(x)), rows=[];
- for(let n=0;n<=99;n++){
-   let score=0,anchors=0,risk=0,reasons=[],hasPair=false,hasRev=false,hasSamePos=false;
-   for(const rule of rules){
-     const add=applyRule(rule,N,n);
-     if(add>0){
-       score+=add; anchors++;
-       if(rule.type==="pairPos")hasPair=true;
-       if(rule.sigKind==="rev")hasRev=true;
-       if(rule.type==="samePos")hasSamePos=true;
-       if(reasons.length<10)reasons.push(rule.label);
-     }
-   }
-   const fn=fN.get(n)||0,fn1=f1.get(n)||0,fn2=f2.get(n)||0,fn3=f3.get(n)||0,total=fn+fn1+fn2+fn3;
-   if(fn===0)score+=1.5; else {score-=5;risk-=5;reasons.push("vừa về N -5")}
-   if(total>=2){score-=4;risk-=4;reasons.push("dày 4 ngày -4")}
-   if(fn>=2){score-=8;risk-=8;reasons.push("N đa nháy -8")}
-   if(anchors<2){score-=6;reasons.push("thiếu 2 cầu exact cùng chỉ -6")}
-   if(rules.length<2){score-=5;reasons.push("ít cầu exact sống -5")}
-   if(recent.includes(n)){score-=4;risk-=4;reasons.push("trùng chốt gần đây -4")}
-   rows.push({n,score:Math.round(score*10)/10,anchors,risk,fn,fn1,fn2,fn3,total,reasons,hasPair,hasRev,hasSamePos})
- }
- rows.sort((a,b)=>(b.score-a.score)||(b.anchors-a.anchors)||(a.total-b.total)||(a.fn-b.fn)||(a.n-b.n));
- const margin=rows[0].score-rows[1].score, closePack=rows.filter(x=>rows[0].score-x.score<=1.5).length;
- rows.forEach(r=>r.tier=tierFor(r,margin,closePack,rules.length));
- return {rows,rules,margin:Math.round(margin*10)/10,closePack}
+function parseKQ(text){
+  const blocks = [];
+  const re = /KQ\s*XSMB\s*(\d{1,2}\/\d{1,2}\/\d{4})([\s\S]*?)(?=KQ\s*XSMB\s*\d{1,2}\/\d{1,2}\/\d{4}|$)/gi;
+  let m;
+  while((m = re.exec(text)) !== null){
+    const date = normDate(m[1]);
+    const body = m[2];
+    const nums = [];
+    const byPrize = {};
+    const lines = body.split(/\n+/);
+    for(const line of lines){
+      const lm = line.match(/^\s*(ĐB|DB|G1|G2|G3|G4|G5|G6|G7)\s*:\s*(.+)$/i);
+      if(!lm) continue;
+      let p = lm[1].toUpperCase().replace('ĐB','DB');
+      const tokens = lm[2].trim().split(/\s+/);
+      byPrize[p] = [];
+      for(const t of tokens){
+        const x = last2(t);
+        if(x !== null){
+          nums.push({num:x, prize:p, raw:t});
+          byPrize[p].push(x);
+        }
+      }
+    }
+    if(nums.length){
+      blocks.push({date, key:dateKey(date), nums, byPrize});
+    }
+  }
+  blocks.sort((a,b)=>a.key-b.key);
+  return blocks;
 }
-function tierFor(r,margin,closePack,ruleCount){
- if(ruleCount<2)return"NGHỈ";
- if(r.score>=7 && margin>=2 && r.anchors>=3 && closePack<=3 && r.fn===0 && (r.hasPair||r.hasRev)) return "REAL-SAFE";
- if(r.score>=3.5 && margin>=0.8 && r.anchors>=2 && closePack<=5 && r.fn===0) return "REAL-LITE";
- if(r.score>=1 && r.anchors>=2 && r.fn===0) return "RICKY";
- return "NGHỈ";
+function countMap(arr){
+  const m = {};
+  for(const x of arr) m[x] = (m[x]||0)+1;
+  return m;
 }
-function isMainTier(t){return t==="REAL-SAFE"||t==="REAL-LITE"}
-function stakeText(t){if(t==="REAL-SAFE")return"1 đơn vị"; if(t==="REAL-LITE")return"0.5 đơn vị"; return"0"}
-function tierClass(t){return t==="REAL-SAFE"?"tsafe":t==="REAL-LITE"?"tlite":t==="RICKY"?"tricky":"tnghi"}
-function updateParsePreview(){[["txtN","parseN","N"],["txtN1","parseN1","N-1"],["txtN2","parseN2","N-2"],["txtN3","parseN3","N-3"]].forEach(([txt,out,label])=>{const val=document.getElementById(txt).value,p=parseDay(val),el=document.getElementById(out);if(!val.trim()){el.innerHTML="";return}const ignored=p.ignored.length?`<div class="warn">Đã bỏ qua: ${p.ignored.map(x=>`<span class="mono">${escapeHtml(x)}</span>`).join(" | ")}</div>`:`<div class="ok">Không có dòng nhiễu.</div>`;el.innerHTML=`<div style="margin-top:6px"><b>${label} parse ${p.okCount}/27 vị trí:</b> <span class="mono">${p.nums.map(pad2).join(" ")}</span></div>${ignored}`})}
-let lastPick=null;
-document.getElementById("btnRun").addEventListener("click",()=>{
- updateParsePreview();
- const N=parseDay(document.getElementById("txtN").value),D1=parseDay(document.getElementById("txtN1").value),D2=parseDay(document.getElementById("txtN2").value),D3raw=document.getElementById("txtN3").value.trim(),D3=D3raw?parseDay(D3raw):null,box=document.getElementById("resultBox");
- if(N.okCount<20||D1.okCount<20||D2.okCount<20){box.innerHTML=`<div class="badbox">Thiếu dữ liệu. Cần ít nhất N, N-1, N-2 đủ format ĐB/G1…G7. Dòng KQ/ngày tháng tự bỏ.</div>`;lastPick=null;document.getElementById("btnHit").disabled=true;document.getElementById("btnMiss").disabled=true;return}
- const res=scoreCandidates(D3,D2,D1,N),top=res.rows[0];
- lastPick={n:top.n,score:top.score,tier:top.tier,isMain:isMainTier(top.tier)};
- const cls=top.tier==="NGHỈ"?"badbox":(isMainTier(top.tier)?"ok":"warn"),liveTop=res.rules.slice(0,7).map(x=>x.label).join("; ")||"không có cầu exact sống";
- const action=isMainTier(top.tier)?"KÈO CHÍNH":"KHÔNG VÀO TIỀN";
- const wk=currentWeekMainCount();
- const warnWeek=(isMainTier(top.tier)&&wk>=3)?`<div class="warn"><b>Cảnh báo tuần:</b> Đã đủ 3 kèo chính trong tuần. Kèo này nên cân nhắc giảm tiền.</div>`:"";
- box.innerHTML=`<div class="grid2"><div><div class="small">Con CHỐT TOP 1</div><div class="big mono">${pad2(top.n)}</div><div class="small">Điểm: <b>${top.score}</b> • Tầng: <span class="tier ${tierClass(top.tier)}">${top.tier}</span> • Margin: <b>${res.margin}</b> • Nhóm sát điểm: <b>${res.closePack}</b></div></div><div><div class="${cls}"><b>${action}</b><br>Tiền gợi ý: <b>${stakeText(top.tier)}</b><br>anchors=${top.anchors}, cầu exact sống=${res.rules.length}, risk=${top.risk}.</div>${warnWeek}<div class="warn"><b>Cầu exact sống:</b><div class="reason">${escapeHtml(liveTop)}</div></div><div class="warn"><b>Lý do chốt:</b><div class="reason">${escapeHtml(top.reasons.slice(0,10).join("; "))}</div></div></div></div>`;
- document.getElementById("btnHit").disabled=false;document.getElementById("btnMiss").disabled=false;
-});
-function load(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch{return[]}}
-function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
-function uuid(){try{return crypto.randomUUID()}catch{return String(Date.now())+Math.random().toString(16).slice(2)}}
-function isTrue(v){return v===true||v==="true"||v===1||v==="1"}
-function weekKey(dateStr){const m=String(dateStr||"").match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(!m)return"";const d=new Date(+m[3],+m[2]-1,+m[1]);const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.toISOString().slice(0,10)}
-function currentWeekMainCount(){const wk=weekKey(document.getElementById("dateTarget").value.trim());if(!wk)return 0;return load().filter(x=>x.isMain&&weekKey(x.date)===wk).length}
-function maxMiss(a){let b=0,c=0;for(const x of a){if(isTrue(x.hit))c=0;else{c++;b=Math.max(b,c)}}return b}
-function saveRecord(hit){if(!lastPick)return;const mode=document.getElementById("mode").value;if(mode==="practice"&&!lastPick.isMain){alert("Chế độ THỰC CHIẾN: chỉ lưu kèo chính SAFE/LITE. Đổi sang TEST nếu muốn lưu RICKY/NGHỈ.");return}const a=load();a.unshift({id:uuid(),date:document.getElementById("dateTarget").value.trim(),chot:pad2(lastPick.n),score:lastPick.score,tier:lastPick.tier,isMain:lastPick.isMain,hit});save(a);updateHistory()}
-document.getElementById("btnHit").addEventListener("click",()=>saveRecord(true));document.getElementById("btnMiss").addEventListener("click",()=>saveRecord(false));document.getElementById("btnUndo").addEventListener("click",()=>{const a=load();if(a.length){a.shift();save(a);updateHistory()}});document.getElementById("btnClearAll").addEventListener("click",()=>{if(confirm("Xoá toàn bộ lịch sử?")){save([]);updateHistory()}});
-function updateHistory(){const a=load(),total=a.length,hits=a.filter(x=>isTrue(x.hit)).length,main=a.filter(x=>x.isMain),mainHits=main.filter(x=>isTrue(x.hit)).length;document.getElementById("kTotal").textContent=total;document.getElementById("kRate").textContent=(total?Math.round(hits/total*100):0)+"%";document.getElementById("kMiss").textContent=maxMiss(a.slice().reverse());document.getElementById("kMainTotal").textContent=main.length;document.getElementById("kMainRate").textContent=(main.length?Math.round(mainHits/main.length*100):0)+"%";const currentW=weekKey(document.getElementById("dateTarget").value.trim());document.getElementById("kWeek").textContent=currentW?a.filter(x=>x.isMain&&weekKey(x.date)===currentW).length:0;document.getElementById("btnUndo").disabled=total===0;const tb=document.getElementById("hist");tb.innerHTML="";a.forEach((x,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${i+1}</td><td class="mono">${escapeHtml(x.date||"")}</td><td class="mono"><b>${x.chot}</b></td><td>${x.score}</td><td class="tier ${tierClass(x.tier)}">${x.tier}</td><td>${x.isMain?"KÈO":"-"} </td><td>${isTrue(x.hit)?"<span class='hit'>✅</span>":"<span class='miss'>❌</span>"}</td><td><button class="danger" data-del="${x.id}">Xoá</button></td>`;tb.appendChild(tr)});tb.querySelectorAll("button[data-del]").forEach(btn=>btn.addEventListener("click",()=>{save(load().filter(r=>r.id!==btn.getAttribute("data-del")));updateHistory()}))}
-["txtN","txtN1","txtN2","txtN3"].forEach(id=>document.getElementById(id).addEventListener("input",updateParsePreview));document.getElementById("dateTarget").addEventListener("input",updateHistory);
-updateParsePreview();updateHistory();
+function touches(num){ return [num[0], num[1]]; }
+function reverse(num){ return num[1]+num[0]; }
+function nearNums(num){
+  const a = Number(num[0]), b = Number(num[1]);
+  const out = new Set();
+  out.add(String(a)+String((b+9)%10));
+  out.add(String(a)+String((b+1)%10));
+  out.add(String((a+9)%10)+String(b));
+  out.add(String((a+1)%10)+String(b));
+  out.add(reverse(num));
+  return [...out].map(x=>x.padStart(2,'0'));
+}
+function clusterNums(num){
+  const a = Number(num[0]), b = Number(num[1]);
+  const set = new Set([num, reverse(num)]);
+  for(const x of [(b+9)%10,(b+1)%10]) set.add(String(a)+String(x));
+  for(const x of [(a+9)%10,(a+1)%10]) set.add(String(x)+String(b));
+  set.add(String(a)+String(a));
+  set.add(String(b)+String(b));
+  return [...set].map(x=>x.padStart(2,'0'));
+}
+function dayNums(day){ return day.nums.map(o=>o.num); }
+function present(day, num){ return dayNums(day).includes(num); }
+function hasAny(day, set){ const s = new Set(dayNums(day)); return set.some(x=>s.has(x)); }
+function getAllNums(days){ return days.flatMap(dayNums); }
+function scoreCandidate(num, days, mode){
+  const d0=days[0], d1=days[1], d2=days[2]; // N-3,N-2,N-1
+  const n1set = new Set(dayNums(d2));
+  if(n1set.has(num)) return {num, score:-999, hardBan:true, reason:['Loại cứng: vừa về N-1'], layers:0};
+
+  const all = getAllNums(days);
+  const freq = all.filter(x=>x===num).length;
+  const byDay = days.map(d=>present(d,num));
+  const touch = touches(num);
+  const rev = reverse(num);
+  const near = nearNums(num);
+  const cluster = clusterNums(num);
+
+  let score = 0, layers = 0, reason = [];
+
+  // Lực số riêng
+  if(freq===1){ score += 1; layers++; reason.push('lực riêng 1 lần'); }
+  else if(freq===2){ score += 2; layers++; reason.push('lực riêng 2 lần'); }
+  else if(freq>=3){ score += 1; layers++; reason.push('lực riêng quá dày, chỉ cộng nhẹ'); }
+
+  // Ngày gần
+  if(byDay[0]) score += .5;
+  if(byDay[1]) score += 1;
+
+  // Vị trí giải
+  for(const d of days){
+    for(const o of d.nums){
+      if(o.num===num && d!==d2) score += prizeWeight[o.prize] || .5;
+    }
+  }
+
+  // Chạm
+  const touchCounts = {};
+  for(const x of all){
+    touchCounts[x[0]]=(touchCounts[x[0]]||0)+1;
+    touchCounts[x[1]]=(touchCounts[x[1]]||0)+1;
+  }
+  let touchScore=0, strongTouches=0;
+  for(const t of touch){
+    const c = touchCounts[t]||0;
+    if(c>=3 && c<=5){ touchScore += 1; strongTouches++; }
+    else if(c>=6 && c<=8){ touchScore += 2; strongTouches++; }
+    else if(c>8){ touchScore += .5; }
+  }
+  if(touchScore>0){ score += touchScore; layers++; reason.push('chạm hỗ trợ'); }
+  if(strongTouches>=2){ score += .8; reason.push('2 chạm cùng có lực'); }
+
+  // Đầu đuôi
+  const headCounts={}, tailCounts={};
+  for(const x of all){ headCounts[x[0]]=(headCounts[x[0]]||0)+1; tailCounts[x[1]]=(tailCounts[x[1]]||0)+1; }
+  let ht=0;
+  const hc=headCounts[num[0]]||0, tc=tailCounts[num[1]]||0;
+  if(hc>=2 && hc<=5) ht += hc>=4?1.5:1; else if(hc>5) ht += .5;
+  if(tc>=2 && tc<=5) ht += tc>=4?1.5:1; else if(tc>5) ht += .5;
+  if(ht>0){ score += ht; layers++; reason.push('đầu/đuôi có lực'); }
+
+  // Cụm
+  const cm = countMap(all.filter(x=>cluster.includes(x)));
+  const uniqueCluster = Object.keys(cm).filter(x=>x!==num).length;
+  const n1Cluster = dayNums(d2).filter(x=>cluster.includes(x)).length;
+  if(uniqueCluster>=1){ score += .5; }
+  if(uniqueCluster>=2){ score += 1.0; layers++; reason.push('cụm có từ 2 số đỡ'); }
+  if(uniqueCluster>=3){ score += .7; }
+  if(n1Cluster>=5){ score -= 1.2; reason.push('cụm quá dày N-1, phạt nhiễu'); }
+
+  // Nhịp số riêng
+  if(!byDay[0] && byDay[1] && !byDay[2]){ score += 1.5; layers++; reason.push('nhịp nghỉ-có-nghỉ');}
+  else if(byDay[0] && byDay[1] && !byDay[2]){ score += 1; layers++; reason.push('nhịp có-có-nghỉ');}
+  else if(byDay[0] && !byDay[1] && !byDay[2]){ score += .5; }
+
+  // Nhịp cụm
+  const cday = days.map(d=>hasAny(d, cluster.filter(x=>x!==num)));
+  if(cday[0] && !cday[1] && cday[2]){ score += 2; layers++; reason.push('nhịp cụm có-nghỉ-có'); }
+  else if(!cday[0] && cday[1] && !cday[2]){ score += 1.5; layers++; reason.push('nhịp cụm nghỉ-có-nghỉ'); }
+  else if(cday[0] && cday[1] && !cday[2]){ score += 1; }
+
+  // Đảo/cặp sát
+  let structure = 0;
+  if(all.includes(rev)){ structure += 1; }
+  const nearCount = new Set(all.filter(x=>near.includes(x))).size;
+  if(nearCount>=1) structure += .5;
+  if(nearCount>=2) structure += .7;
+  if(structure>0){ score += structure; layers++; reason.push('đảo/cặp sát hỗ trợ'); }
+
+  // Pha xác nhận từ N-1 nhưng không trùng số
+  const n1Nums = dayNums(d2);
+  const n1Touch = n1Nums.some(x=>touch.includes(x[0]) || touch.includes(x[1]));
+  const n1Near = n1Nums.some(x=>near.includes(x) || cluster.includes(x));
+  if(n1Touch || n1Near){ score += 1; layers++; reason.push('N-1 xác nhận chạm/cụm, không trùng số'); }
+  else { score -= 1; reason.push('thiếu xác nhận N-1'); }
+
+  // Phạt cô lập
+  if(uniqueCluster===0 && nearCount===0){ score -= 2; reason.push('phạt số cô lập'); }
+
+  // Mode
+  if(mode==='SAFE'){
+    // siết hơn bằng cách yêu cầu layer cao, phạt nhiễu mạnh hơn thực hiện ở selector
+  }
+
+  return {num, score:Math.round(score*100)/100, hardBan:false, reason, layers};
+}
+function choose(days, mode){
+  const candidates = [];
+  for(let i=0;i<100;i++){
+    const num=pad2(i);
+    const r=scoreCandidate(num,days,mode);
+    if(!r.hardBan) candidates.push(r);
+  }
+  candidates.sort((a,b)=>b.score-a.score || b.layers-a.layers || Number(a.num)-Number(b.num));
+  const minScoreBase = Number(document.getElementById('minScore').value || 7);
+  const gapBase = Number(document.getElementById('gap').value || .7);
+  const minScore = mode==='SAFE' ? Math.max(minScoreBase, 9.2) : minScoreBase;
+  const gap = mode==='SAFE' ? Math.max(gapBase, 1.5) : gapBase;
+  const minLayers = mode==='SAFE' ? 5 : 4;
+
+  const top = candidates[0];
+  const second = candidates[1];
+  let decision='NGHỈ', status='REST';
+  let why = [];
+  if(!top){
+    why.push('Không có ứng viên');
+  }else{
+    const diff = second ? top.score - second.score : 99;
+    if(top.score < minScore) why.push(`Top1 chưa đủ điểm (${top.score} < ${minScore})`);
+    if(top.layers < minLayers) why.push(`Top1 chưa đủ lớp đồng quy (${top.layers}/${minLayers})`);
+    if(diff < gap) why.push(`Top1 không vượt Top2 đủ xa (${diff.toFixed(2)} < ${gap})`);
+    if(!why.length){ decision=top.num; status='BET'; why=top.reason; }
+  }
+  return {decision,status,top,second,candidates,why};
+}
+function checkHit(day, num){
+  if(num==='NGHỈ') return null;
+  return dayNums(day).includes(num);
+}
+function parseOnly(){
+  const days = parseKQ(document.getElementById('input').value);
+  document.getElementById('sParsed').textContent = days.length;
+  document.getElementById('log').textContent = days.map(d=>`${d.date}: ${d.nums.length} lô`).join('\n') || 'Không đọc được dữ liệu.';
+  return days;
+}
+function runBacktest(){
+  const days = parseOnly();
+  const mode = document.getElementById('mode').value;
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  if(days.length < 4){
+    tbody.innerHTML = '<tr><td colspan="7" class="small">Cần ít nhất 4 ngày để test mù: 3 ngày soi + 1 ngày đối chiếu.</td></tr>';
+    return;
+  }
+  let total=0, bets=0, hits=0, miss=0, loseStreak=0, maxLose=0;
+  const logs=[];
+  for(let i=3;i<days.length;i++){
+    const inputDays = days.slice(i-3,i);
+    const target = days[i];
+    const pick = choose(inputDays, mode);
+    const hit = checkHit(target, pick.decision);
+    total++;
+    let res = 'NGHỈ', cls='warnTxt';
+    if(pick.status==='BET'){
+      bets++;
+      if(hit){ hits++; loseStreak=0; res='ĂN'; cls='ok'; }
+      else{ miss++; loseStreak++; maxLose=Math.max(maxLose,loseStreak); res='TRƯỢT'; cls='badTxt'; }
+    }
+    const tr = document.createElement('tr');
+    const top2 = pick.second ? `${pick.second.num} (${pick.second.score}, ${pick.second.layers} lớp)` : '-';
+    const score = pick.top ? `${pick.top.score} / ${pick.top.layers} lớp` : '-';
+    tr.innerHTML = `
+      <td><b>${target.date}</b></td>
+      <td class="small">${inputDays.map(d=>d.date).join('<br>')}</td>
+      <td class="mono"><b>${pick.decision}</b></td>
+      <td>${score}</td>
+      <td>${top2}</td>
+      <td class="${cls}"><b>${res}</b></td>
+      <td class="small">${(pick.status==='BET'?pick.why:pick.why).join('; ')}</td>`;
+    tbody.appendChild(tr);
+    logs.push(`Soi ${target.date}: dùng ${inputDays.map(d=>d.date).join(', ')} => ${pick.decision} => ${res}`);
+  }
+  document.getElementById('sDays').textContent = total;
+  document.getElementById('sBet').textContent = bets;
+  document.getElementById('sHit').textContent = hits;
+  document.getElementById('sMiss').textContent = miss;
+  document.getElementById('sRate').textContent = bets ? Math.round(hits/bets*1000)/10+'%' : '-';
+  document.getElementById('sFreq').textContent = total ? (Math.round((bets/total*7)*10)/10) : '-';
+  document.getElementById('sMaxLose').textContent = maxLose;
+  document.getElementById('log').textContent = logs.join('\n');
+}
+function predictNext(){
+  const days = parseOnly();
+  const mode = document.getElementById('mode').value;
+  const box = document.getElementById('nextBox');
+  if(days.length < 3){ box.textContent='Cần ít nhất 3 ngày gần nhất.'; return; }
+  const inputDays = days.slice(-3);
+  const pick = choose(inputDays, mode);
+  const topLines = pick.candidates.slice(0,8).map((c,i)=>`${i+1}. ${c.num} — ${c.score} điểm — ${c.layers} lớp — ${c.reason.slice(0,4).join('; ')}`).join('\n');
+  box.textContent =
+`INPUT ĐƯỢC DÙNG: ${inputDays.map(d=>d.date).join(', ')}
+MODE: ${mode}
+
+CHỐT: ${pick.decision}
+TOP1: ${pick.top ? pick.top.num+' — '+pick.top.score+' điểm — '+pick.top.layers+' lớp' : '-'}
+TOP2: ${pick.second ? pick.second.num+' — '+pick.second.score+' điểm — '+pick.second.layers+' lớp' : '-'}
+
+LÝ DO:
+${pick.why.join('\n')}
+
+TOP THAM KHẢO:
+${topLines}`;
+}
+function clearAll(){
+  document.getElementById('input').value='';
+  document.getElementById('tbody').innerHTML='<tr><td colspan="7" class="small">Chưa có dữ liệu.</td></tr>';
+  ['sDays','sBet','sHit','sMiss','sParsed'].forEach(id=>document.getElementById(id).textContent='0');
+  ['sRate','sFreq'].forEach(id=>document.getElementById(id).textContent='-');
+  document.getElementById('sMaxLose').textContent='0';
+  document.getElementById('log').textContent='Chưa chạy.';
+  document.getElementById('nextBox').textContent='Chưa soi.';
+}
 </script>
 </body>
 </html>
